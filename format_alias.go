@@ -39,3 +39,6 @@ func Format(datetime time.Time, format string) string {
 }
 
 // TODO:曜日を返す関数(日本語/英語両対応)
+// TODO:指定月の末日を返す
+// TODO:指定月の頭日を返す
+// TODO:フォーマット部分のみ置換して返す
