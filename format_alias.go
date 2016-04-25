@@ -5,40 +5,60 @@ import (
 	"time"
 )
 
-// Datetie 対応表に格納する構造体
+// Datetime 対応表に格納する構造体
 type Datetime struct {
 	src  string // time.Format()側のフォーマット
 	dest string // PHPなどで使用されている%[A-Za-z]なフォーマット
 }
 
-const DatetimeFormat = "2006-01-02 15:04:05"
+// DatetimeZeroFormat Y-m-d H:i:s形式
+const DatetimeZeroFormat = "2006-01-02 15:04:05"
 
-const DateFormat = "2006-01-02"
+// DateZeroFormat Y-m-d形式
+const DateZeroFormat = "2006-01-02"
 
-const DefaultFormat = "2006-1-2 3:4:5"
+// DatetimeFormat 0つきでない
+const DatetimeFormat = "2006-1-2 3:4:5"
+
+// DateFormat 0つきでない
+const DateFormat = "2006-1-2"
+
+// DefaultFormat Goのデフォルトな日付フォーマット
+const DefaultFormat = DatetimeFormat
 
 func main() {
 
 	now := time.Now()
 	now = time.Date(now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second(), 0, time.Local)
 
-	fmt.Printf("%q\n", now.Format(DatetimeFormat))
-	fmt.Printf("%q\n", now.Format(DateFormat))
-	fmt.Printf("%q\n", Format(now, "%Y-%m-%d %H:%i:%s"))
-	fmt.Printf("%q\n", Format(now, "%Y-%m-%d"))
+	//fmt.Printf("%q\n", now.Format(DatetimeFormat))
+	//fmt.Printf("%q\n", now.Format(DateFormat))
+	fmt.Printf("%q\n", Format(now, "Y-m-d H:i:s"))
+	fmt.Printf("%q\n", Format(now, "Y-m-d"))
 }
 
-// Time.Format()のAlias関数
+// Format Time.Format()のAlias関数
 func Format(datetime time.Time, format string) string {
-	// TODO:本来はformatを""%[a-zA-z]"な形で正規表現でパース
-	// TODO:対応表(constで定義)を用意しておき対応した形でFormatなされていればOK
-	if format == "%Y-%m-%d %H:%i:%s" {
-		return datetime.Format(DatetimeFormat)
+	// TODO:正規表現で実装したかったけどちょっとやり方が今わからないので完全一致で実装
+	formatList := [][]string{
+		{"Y-m-d H:i:s", DatetimeZeroFormat},
+		{"Y-n-j h:i:s", DatetimeFormat},
+		{"Y-m-d", DateZeroFormat},
+		{"Y-n-j", DateFormat},
 	}
-	return datetime.Format(DefaultFormat)
+
+	var result string = ""
+	for _, array := range formatList {
+		if format == array[0] {
+			result = array[1]
+		}
+	}
+
+	if result == "" {
+		result = DefaultFormat
+	}
+	return datetime.Format(result)
 }
 
 // TODO:曜日を返す関数(日本語/英語両対応)
-// TODO:指定月の末日を返す
 // TODO:指定月の頭日を返す
-// TODO:フォーマット部分のみ置換して返す
