@@ -26,9 +26,6 @@ const DateFormat = "2006-1-2"
 // DefaultFormat Goのデフォルトな日付フォーマット
 const DefaultFormat = DatetimeFormat
 
-// WeekdayList 日本語の曜日リスト
-const WeekdayList = [...]string{"日", "月", "火", "水", "木", "金", "土"}
-
 func main() {
 
 	now := time.Now()
@@ -65,7 +62,9 @@ func Format(datetime time.Time, format string) string {
 
 // WeekdayName 日本語の曜日を返す
 func WeekdayName(datetime time.Time) string {
-	return WeekdayList[datetime.Weekday()]
+	// weekdayList 日本語の曜日リスト
+	weekdayList := [7]string{"日", "月", "火", "水", "木", "金", "土"}
+	return weekdayList[datetime.Weekday()]
 }
 
 // isLeapYear() 閏年を判定
