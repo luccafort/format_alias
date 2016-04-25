@@ -70,16 +70,12 @@ func WeekdayName(datetime time.Time) string {
 // isLeapYear() 閏年を判定
 func isLeapYear(datetime time.Time) bool {
 	year := datetime.Year()
-	switch year {
-	case year%400 == 0:
-		fallthrough
-	case year%4 == 0:
-		// 閏年
+	if year%400 == 0 {
 		return true
-	case year%100 == 0:
-		fallthrough
-	default:
-		// 閏年じゃない
+	} else if year%100 == 0 {
 		return false
+	} else if year%4 == 0 {
+		return true
 	}
+	return false
 }
